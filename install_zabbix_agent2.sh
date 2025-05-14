@@ -3,7 +3,7 @@
 echo "👉 Bắt đầu cài đặt Zabbix Agent 2 cho AlmaLinux 9..."
 
 # Cài đặt Zabbix Agent 2
-rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/8/x86_64/zabbix-release-latest-6.0.el8.noarch.rpm
+rpm -Uvh https://repo.zabbix.com/zabbix/6.4/rhel/9/x86_64/zabbix-release-6.4-2.el9.noarch.rpm
 dnf clean all
 dnf install -y zabbix-agent2 zabbix-agent2-plugin-* jq
 
