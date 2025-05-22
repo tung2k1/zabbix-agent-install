@@ -1,12 +1,15 @@
 #!/bin/bash
 
 echo "👉 Bắt đầu cài đặt Zabbix Agent 2 cho AlmaLinux 9..."
+sudo dnf remove zabbix-agent2 -y
+sudo rm -rf /etc/zabbix
+sudo rm -rf /var/log/zabbix
 
 # Cài đặt Zabbix Agent 2
-rpm -Uvh https://repo.zabbix.com/zabbix/6.4/rhel/9/x86_64/zabbix-release-6.4-2.el9.noarch.rpm
+rpm -Uvh https://repo.zabbix.com/zabbix/7.0/alma/9/x86_64/zabbix-release-latest-7.0.el9.noarch.rpm
 dnf clean all
-dnf install -y zabbix-agent2 zabbix-agent2-plugin-* jq
-
+dnf install zabbix-agent2
+dnf install zabbix-agent2-plugin-mongodb zabbix-agent2-plugin-mssql zabbix-agent2-plugin-postgresql
 # Lấy địa chỉ IP hiện tại của server
 SERVER_IP=$(hostname -I | awk '{print $1}')
 STATIC_IP="37.48.124.207"
