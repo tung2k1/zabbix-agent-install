@@ -2,6 +2,8 @@
 
 echo "👉 Bắt đầu cài đặt Zabbix Agent 2 cho AlmaLinux 9..."
 sudo dnf remove zabbix-agent2 -y
+sudo dnf remove zabbix-release -y
+sudo rm -f /etc/yum.repos.d/zabbix*.repo
 sudo rm -rf /etc/zabbix
 sudo rm -rf /var/log/zabbix
 
