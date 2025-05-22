@@ -1,6 +1,9 @@
 #!/bin/bash
 
 echo "👉 Bắt đầu cài đặt Zabbix Agent 2..."
+sudo dnf remove zabbix-agent2 -y
+sudo dnf remove zabbix-release -y
+sudo rm -f /etc/yum.repos.d/zabbix*.repo
 
 # Cài đặt Zabbix Agent 2
 rpm -Uvh https://repo.zabbix.com/zabbix/7.0/alma/8/x86_64/zabbix-release-latest-7.0.el8.noarch.rpm
