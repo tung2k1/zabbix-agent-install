@@ -12,7 +12,7 @@ dnf install zabbix-agent2
 dnf install zabbix-agent2-plugin-mongodb zabbix-agent2-plugin-mssql zabbix-agent2-plugin-postgresql
 # Lấy địa chỉ IP hiện tại của server
 SERVER_IP=$(hostname -I | awk '{print $1}')
-STATIC_IP="37.48.124.207"
+STATIC_IP="103.253.21.236"
 echo "👉 IP của server: $SERVER_IP"
 echo "👉 Cấu hình Zabbix với Server=$STATIC_IP,$SERVER_IP và ServerActive=$STATIC_IP"
 
