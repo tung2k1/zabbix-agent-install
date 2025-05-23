@@ -23,7 +23,6 @@ sed -i "s/^Hostname=.*/Hostname=$SERVER_IP/" /etc/zabbix/zabbix_agent2.conf
 
 cat <<EOF >> /etc/zabbix/zabbix_agent2.conf
 UserParameter=raid.status.custom,/usr/local/bin/check_raid_status_custom.sh
-UserParameter=raid.pd_firmware_state,sudo /usr/local/bin/check_pd_firmware_state.sh
 EOF
 
 # Tạo script kiểm tra RAID
@@ -47,7 +46,6 @@ chmod +x /usr/local/bin/check_raid_status_custom.sh
 
 # Thêm quyền sudo cho Zabbix để chạy mdadm mà không cần mật khẩu
 echo "👉 Cấu hình sudo cho Zabbix..."
-
 echo "zabbix ALL=(ALL) NOPASSWD: /usr/sbin/mdadm" | sudo tee -a /etc/sudoers > /dev/null
 
 # Mở cổng firewall cho Zabbix Agent
