@@ -23,6 +23,7 @@ sed -i "s/^Hostname=.*/Hostname=$SERVER_IP/" /etc/zabbix/zabbix_agent2.conf
 
 cat <<EOF >> /etc/zabbix/zabbix_agent2.conf
 UserParameter=raid.status.custom,/usr/local/bin/check_raid_status_custom.sh
+UserParameter=raid.status,cat /proc/mdstat | grep -E '\[.*_.*\]' | wc -l
 EOF
 
 # Tạo script kiểm tra RAID
@@ -37,7 +38,6 @@ for array in $raid_arrays; do
 done
 echo $total_failed_devices
 EOF
-
 
 
 
