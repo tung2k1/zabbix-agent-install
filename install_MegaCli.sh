@@ -22,11 +22,25 @@ sed -i "s/^ServerActive=.*/ServerActive=$STATIC_IP/" /etc/zabbix/zabbix_agent2.c
 sed -i "s/^Hostname=.*/Hostname=$SERVER_IP/" /etc/zabbix/zabbix_agent2.conf
 
 cat <<EOF >> /etc/zabbix/zabbix_agent2.conf
+UserParameter=raid.status.custom,/usr/local/bin/check_raid_status_custom.sh
 UserParameter=raid.pd_firmware_state,sudo /usr/local/bin/check_pd_firmware_state.sh
 EOF
 
 # Tạo script kiểm tra RAID
-echo "👉 Tạo script kiểm tra RAID..."
+echo "👉 Tạo script kiểm tra soft RAID..."
+cat <<'EOF' > /usr/local/bin/check_raid_status_custom.sh
+#!/bin/bash
+raid_arrays=$(cat /proc/mdstat | grep ^md | awk '{print $1}')
+total_failed_devices=0
+for array in $raid_arrays; do
+    failed_devices=$(sudo mdadm --detail /dev/$array | grep "Failed Devices" | awk '{print $4}')
+    total_failed_devices=$((total_failed_devices + failed_devices))
+done
+echo $total_failed_devices
+EOF
+
+# Tạo script kiểm tra RAID
+echo "👉 Tạo script kiểm tra hard RAID..."
 cat <<'EOF' > /usr/local/bin/check_pd_firmware_state.sh
 #!/bin/bash
 output=$(sudo /opt/MegaRAID/MegaCli/MegaCli64 -PDList -aAll | grep -i "Firmware state")
@@ -40,10 +54,12 @@ EOF
 
 # Cấp quyền thực thi cho các script
 chmod +x /usr/local/bin/check_pd_firmware_state.sh
+chmod +x /usr/local/bin/check_raid_status_custom.sh
 
 # Thêm quyền sudo cho Zabbix để chạy mdadm mà không cần mật khẩu
 echo "👉 Cấu hình sudo cho Zabbix..."
 echo "zabbix ALL=(ALL) NOPASSWD: /usr/sbin/MegaCli64, /sbin/sm, /usr/local/bin/check_pd_firmware_state.sh" | sudo tee -a /etc/sudoers > /dev/null
+echo "zabbix ALL=(ALL) NOPASSWD: /usr/sbin/mdadm" | sudo tee -a /etc/sudoers > /dev/null
 
 # Mở cổng firewall cho Zabbix Agent
 echo "👉 Cấu hình firewall..."
