@@ -6,7 +6,7 @@ sudo dnf remove zabbix-release -y
 sudo rm -f /etc/yum.repos.d/zabbix*.repo
 
 # Cài đặt Zabbix Agent 2
-rpm -Uvh https://repo.zabbix.com/zabbix/7.2/release/alma/9/noarch/zabbix-release-latest-7.2.el9.noarch.rpm
+rpm -Uvh https://repo.zabbix.com/zabbix/7.2/release/alma/8/noarch/zabbix-release-latest-7.2.el8.noarch.rpm
 dnf clean all
 dnf install zabbix-agent2 -y
 dnf install zabbix-agent2-plugin-mongodb -y zabbix-agent2-plugin-mssql -y zabbix-agent2-plugin-postgresql -y
