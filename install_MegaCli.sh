@@ -23,24 +23,11 @@ sed -i "s/^ServerActive=.*/ServerActive=$STATIC_IP/" /etc/zabbix/zabbix_agent2.c
 sed -i "s/^Hostname=.*/Hostname=$SERVER_IP/" /etc/zabbix/zabbix_agent2.conf
 
 cat <<EOF >> /etc/zabbix/zabbix_agent2.conf
-UserParameter=raid.status.custom,/usr/local/bin/check_raid_status_custom.sh
 UserParameter=raid.status,cat /proc/mdstat | grep -E '\[.*_.*\]' | wc -l
 UserParameter=raid.status.custom,/usr/local/bin/check_raid_status_custom.sh
 UserParameter=raid.pd_firmware_state,sudo /usr/local/bin/check_pd_firmware_state.sh
 EOF
 
-# Tạo script kiểm tra RAID
-echo "👉 Tạo script kiểm tra soft RAID..."
-cat <<'EOF' > /usr/local/bin/check_raid_status_custom.sh
-#!/bin/bash
-raid_arrays=$(cat /proc/mdstat | grep ^md | awk '{print $1}')
-total_failed_devices=0
-for array in $raid_arrays; do
-    failed_devices=$(sudo mdadm --detail /dev/$array | grep "Failed Devices" | awk '{print $4}')
-    total_failed_devices=$((total_failed_devices + failed_devices))
-done
-echo $total_failed_devices
-EOF
 
 # Tạo script kiểm tra RAID
 echo "👉 Tạo script kiểm tra hard RAID..."
