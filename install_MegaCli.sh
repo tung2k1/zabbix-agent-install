@@ -24,6 +24,8 @@ sed -i "s/^Hostname=.*/Hostname=$SERVER_IP/" /etc/zabbix/zabbix_agent2.conf
 
 cat <<EOF >> /etc/zabbix/zabbix_agent2.conf
 UserParameter=raid.status.custom,/usr/local/bin/check_raid_status_custom.sh
+UserParameter=raid.status,cat /proc/mdstat | grep -E '\[.*_.*\]' | wc -l
+UserParameter=raid.status.custom,/usr/local/bin/check_raid_status_custom.sh
 UserParameter=raid.pd_firmware_state,sudo /usr/local/bin/check_pd_firmware_state.sh
 EOF
 
@@ -52,6 +54,21 @@ else
 fi
 EOF
 
+echo "👉 Tạo script kiểm tra soft RAID..."
+cat <<'EOF' > /usr/local/bin/check_raid_status_custom.sh
+#!/bin/bash
+raid_arrays=$(cat /proc/mdstat | grep ^md | awk '{print $1}')
+total_failed_devices=0
+for array in $raid_arrays; do
+    failed_devices=$(sudo mdadm --detail /dev/$array | grep "Failed Devices" | awk '{print $4}')
+    total_failed_devices=$((total_failed_devices + failed_devices))
+done
+echo $total_failed_devices
+
+
+chmod +x /usr/local/bin/check_raid_status_custom.sh
+echo "👉 Cấu hình sudo cho Zabbix..."
+echo "zabbix ALL=(ALL) NOPASSWD: /usr/sbin/mdadm" | sudo tee -a /etc/sudoers > /dev/null
 
 # Cấp quyền thực thi cho các script
 chmod +x /usr/local/bin/check_pd_firmware_state.sh
