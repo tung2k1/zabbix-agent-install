@@ -51,11 +51,7 @@ for array in $raid_arrays; do
     total_failed_devices=$((total_failed_devices + failed_devices))
 done
 echo $total_failed_devices
-
-
-chmod +x /usr/local/bin/check_raid_status_custom.sh
-echo "👉 Cấu hình sudo cho Zabbix..."
-echo "zabbix ALL=(ALL) NOPASSWD: /usr/sbin/mdadm" | sudo tee -a /etc/sudoers > /dev/null
+EOF
 
 # Cấp quyền thực thi cho các script
 chmod +x /usr/local/bin/check_pd_firmware_state.sh
