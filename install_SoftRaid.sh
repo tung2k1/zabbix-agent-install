@@ -9,7 +9,7 @@ echo "👉 Bắt đầu cài đặt Zabbix Agent 2..."
 rpm -Uvh https://repo.zabbix.com/zabbix/7.2/release/alma/9/noarch/zabbix-release-latest-7.2.el9.noarch.rpm
 dnf clean all
 dnf install zabbix-agent2
-dnf install zabbix-agent2-plugin-mongodb zabbix-agent2-plugin-mssql zabbix-agent2-plugin-postgresql
+dnf install -y zabbix-agent2-plugin-mongodb zabbix-agent2-plugin-mssql zabbix-agent2-plugin-postgresql
 
 # Lấy địa chỉ IP hiện tại của server
 SERVER_IP=$(hostname -I | awk '{print $1}')
