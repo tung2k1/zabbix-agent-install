@@ -6,9 +6,10 @@ sudo dnf remove zabbix-release -y
 sudo rm -f /etc/yum.repos.d/zabbix*.repo
 
 # Cài đặt Zabbix Agent 2
-rpm -Uvh https://repo.zabbix.com/zabbix/7.0/alma/8/x86_64/zabbix-release-latest-7.0.el8.noarch.rpm
+rpm -Uvh https://repo.zabbix.com/zabbix/7.2/release/alma/9/noarch/zabbix-release-latest-7.2.el9.noarch.rpm
 dnf clean all
-dnf install -y zabbix-agent2 zabbix-agent2-plugin-* jq
+dnf install zabbix-agent2 -y
+dnf install zabbix-agent2-plugin-mongodb -y zabbix-agent2-plugin-mssql -y zabbix-agent2-plugin-postgresql -y
 
 # Lấy địa chỉ IP hiện tại của server
 SERVER_IP=$(hostname -I | awk '{print $1}')
