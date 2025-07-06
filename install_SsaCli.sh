@@ -1,17 +1,18 @@
 #!/bin/bash
 
 echo "👉 Bắt đầu cài đặt Zabbix Agent 2 cho AlmaLinux 9..."
-sudo dnf remove zabbix-agent2 -y
-sudo dnf remove zabbix-release -y
-sudo rm -f /etc/yum.repos.d/zabbix*.repo
-sudo rm -rf /etc/zabbix
-sudo rm -rf /var/log/zabbix
+#sudo dnf remove zabbix-agent2 -y
+#sudo dnf remove zabbix-release -y
+#sudo rm -f /etc/yum.repos.d/zabbix*.repo
+#sudo rm -rf /etc/zabbix
+#sudo rm -rf /var/log/zabbix
 
 # Cài đặt Zabbix Agent 2
-rpm -Uvh https://repo.zabbix.com/zabbix/7.2/release/alma/8/noarch/zabbix-release-latest-7.2.el8.noarch.rpm
-dnf clean all
-dnf install zabbix-agent2 -y
-dnf install zabbix-agent2-plugin-mongodb -y zabbix-agent2-plugin-mssql -y zabbix-agent2-plugin-postgresql -y
+wget https://repo.zabbix.com/zabbix/7.2/release/debian/pool/main/z/zabbix-release/zabbix-release_latest_7.2+debian12_all.deb
+dpkg -i zabbix-release_latest_7.2+debian12_all.deb
+apt update
+apt install zabbix-agent2
+apt install zabbix-agent2-plugin-mongodb zabbix-agent2-plugin-mssql zabbix-agent2-plugin-postgresql
 
 # Lấy địa chỉ IP hiện tại của server
 SERVER_IP=$(hostname -I | awk '{print $1}')
@@ -70,8 +71,10 @@ echo "zabbix ALL=(ALL) NOPASSWD: /usr/sbin/mdadm" | sudo tee -a /etc/sudoers > /
 
 # Mở cổng firewall cho Zabbix Agent
 echo "👉 Cấu hình firewall..."
-sudo firewall-cmd --permanent --add-port=10050/tcp
-sudo firewall-cmd --reload
+sudo apt install ufw -y
+sudo ufw enable
+sudo ufw allow 10050/tcp
+
 
 # Khởi động Zabbix Agent 2
 echo "👉 Khởi động lại Zabbix Agent 2..."
